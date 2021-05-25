@@ -1,0 +1,64 @@
+{
+  "name": "captureimage",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "clean": "cd android && gradlew clean",
+    "release-apk": "cd android && gradlew assembleRelease",
+    "ios": "react-native run-ios",
+    "reload": "adb shell input text rr",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+  },
+  "dependencies": {
+    "@react-native-firebase/app": "12.0.0",
+    "@react-native-firebase/storage": "12.0.0",
+    "formik": "2.2.8",
+    "react": "17.0.1",
+    "react-native": "0.64.1",
+    "react-native-action-button": "2.8.5",
+    "react-native-elements": "3.4.1",
+    "react-native-firebase": "5.6.0",
+    "react-native-gesture-handler": "1.6.1",
+    "react-native-get-random-values": "1.4.0",
+    "react-native-image-crop-picker": "0.36.2",
+    "react-native-reanimated": "1.8.0",
+    "react-native-safe-area-context": "1.0.0",
+    "react-native-screens": "2.7.0",
+    "react-native-vector-icons": "6.6.0",
+    "react-navigation": "4.4.4",
+    "react-navigation-stack": "2.10.4",
+    "uuid": "8.3.2",
+    "yup": "0.32.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/react-native": "^0.64.5",
+    "@types/react-test-renderer": "^16.9.2",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.14.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.64.0",
+    "react-test-renderer": "17.0.1",
+    "typescript": "^3.8.3"
+  },
+  "resolutions": {
+    "@types/react": "^17"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}

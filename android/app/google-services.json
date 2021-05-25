@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1091555359408",
+    "project_id": "captureimage-b8032",
+    "storage_bucket": "captureimage-b8032.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091555359408:android:9a8b542bdc61663cb29975",
+        "android_client_info": {
+          "package_name": "com.captureimage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091555359408-6djqg5kvohepdef6ro0noamgn2rst449.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA95JCA0dbQzvn9GH2MH2LGv5KWUPsKLCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091555359408-6djqg5kvohepdef6ro0noamgn2rst449.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
