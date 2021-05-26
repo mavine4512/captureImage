@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {View, Button, Text, Image, StyleSheet} from 'react-native';
+import {View, Button, Text, Image, StyleSheet, FlatList} from 'react-native';
 import storage from '@react-native-firebase/storage';
-//import {utils} from '@react-native-firebase/app';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import {ref} from 'yup';
 
 export interface ImagePickerResponse {
   didCancel?: boolean;
@@ -33,22 +31,20 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
             setImages(i);
           });
         });
-        console.log(images);
+        console.log('images:', images);
       })
       .catch(error => {
         console.error(error);
       });
-  },[]);
+  }, []);
   useEffect(() => {
     if (photo) {
-      console.log('uploading', photo);
       const filename = photo.path.replace(/^.*[\\\/]/, '');
       const reference = storage().ref('/images/' + filename);
-      console.log(reference.fullPath);
       reference
         .putFile(photo.path)
         .then(status => {
-          //  console.log('s', status);
+          // console.log('s', status);
         })
         .catch(error => {
           //  console.log('e', error);
@@ -82,26 +78,48 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {photo == null ? (
-        <View style={styles.imageContainer}>
-          <Text>Kindly load an image</Text>
-        </View>
-      ) : (
-        <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: photo?.path,
-            }}
-            style={styles.previewImage}
-          />
-        </View>
-      )}
+    console.log('data :', images),
+    (
+      <>
+        <View style={styles.container}>
+          {photo == null ? (
+            <View style={styles.imageContainer}>
+              <Text>Kindly load an image</Text>
+            </View>
+          ) : (
+            <View style={styles.imageContainer}>
+              <Image
+                source={{
+                  uri: photo?.path,
+                }}
+                style={styles.previewImage}
+              />
+            </View>
+          )}
 
-      <View style={styles.button}>
-        <Button title="Pick Image" onPress={onAvatarClicked} />
-      </View>
-    </View>
+          <View style={styles.button}>
+            <Button title="Pick Image" onPress={() => onAvatarClicked()} />
+          </View>
+        </View>
+        {/*<FlatList*/}
+        {/*  initialNumToRender={2}*/}
+        {/*  data={images}*/}
+        {/*  // keyExtractor={item => item.}*/}
+        {/*  renderItem={({item}) => (*/}
+        {/*    <View>*/}
+        {/*      <Image*/}
+        {/*        source={{*/}
+        {/*          uri: item.url,*/}
+        {/*        }}*/}
+        {/*        // style={styles.image}*/}
+        {/*        resizeMode={'contain'}*/}
+        {/*      />*/}
+        {/*      */}
+        {/*    </View>*/}
+        {/*  )}*/}
+        {/*/>*/}
+      </>
+    )
   );
 };
 
