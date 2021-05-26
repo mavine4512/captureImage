@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
-import { View, Button, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, {useEffect, useState} from 'react';
+import {View, Button, Text, Image, StyleSheet} from 'react-native';
 import storage from '@react-native-firebase/storage';
-// import {utils} from '@react-native-firebase/app';
+//import {utils} from '@react-native-firebase/app';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import {ref} from 'yup';
 
 export interface ImagePickerResponse {
   didCancel?: boolean;
@@ -18,10 +19,42 @@ export interface ImagePickerResponse {
 }
 
 const FormScreen: React.FC<ImagePickerResponse> = () => {
-  const [selectedImage, setSelectedImage] = useState<string>('');
   const [photo, setPhoto] = useState<any>(null);
-  // const reference = storage().ref('black-t-shirt-sm.png');
-
+  const [images, setImages] = useState<string[]>([]);
+  useEffect(() => {
+    const i: string[] = [];
+    storage()
+      .ref('/images/')
+      .list()
+      .then(files => {
+        files.items.map(file => {
+          file.getDownloadURL().then(url => {
+            i.push(url);
+            setImages(i);
+          });
+        });
+        console.log(images);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },[]);
+  useEffect(() => {
+    if (photo) {
+      console.log('uploading', photo);
+      const filename = photo.path.replace(/^.*[\\\/]/, '');
+      const reference = storage().ref('/images/' + filename);
+      console.log(reference.fullPath);
+      reference
+        .putFile(photo.path)
+        .then(status => {
+          //  console.log('s', status);
+        })
+        .catch(error => {
+          //  console.log('e', error);
+        });
+    }
+  }, [photo]);
   const onAvatarClicked = (): void => {
     //start image cropper service
     ImageCropPicker.openPicker({
@@ -40,31 +73,17 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
       forceJpg: true,
     })
       .then(image => {
-        console.log(image);
-        setSelectedImage(image.path);
-        setPhoto(photo);
+        setPhoto(image);
+        //  uploadImage();
       })
       .catch(error => {
         console.log(error);
       });
   };
 
-  const onSave = (): void => {
-console.log('save ')
-      // <TouchableOpacity
-      //   onPress={async () => {
-      //     // path to existing file on filesystem
-      //     const pathToFile = `${utils.FilePath.PICTURES_DIRECTORY}/black-t-shirt-sm.png`;
-      //     // uploads file
-      //     await reference.putFile(pathToFile);
-      //   }}
-      // />
-  };
-
-
   return (
     <View style={styles.container}>
-      {selectedImage === '' ? (
+      {photo == null ? (
         <View style={styles.imageContainer}>
           <Text>Kindly load an image</Text>
         </View>
@@ -72,7 +91,7 @@ console.log('save ')
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: selectedImage,
+              uri: photo?.path,
             }}
             style={styles.previewImage}
           />
@@ -80,7 +99,6 @@ console.log('save ')
       )}
 
       <View style={styles.button}>
-        <Button title="Save " onPress={onSave} />
         <Button title="Pick Image" onPress={onAvatarClicked} />
       </View>
     </View>
@@ -114,5 +132,3 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
-
-
