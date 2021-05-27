@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {View, Button, Text, Image, StyleSheet, FlatList} from 'react-native';
+import {
+  View,
+  Button,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  FlatList,
+} from 'react-native';
 import storage from '@react-native-firebase/storage';
 import ImageCropPicker from 'react-native-image-crop-picker';
 
@@ -31,10 +39,10 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
             setImages(i);
           });
         });
-        console.log('images:', images);
+        // console.log('images:', images);
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
       });
   }, []);
   useEffect(() => {
@@ -78,35 +86,35 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
   };
 
   return (
-    console.log('data :', images),
-    (
-      <>
-        <View style={styles.container}>
-          {photo == null ? (
-            <View style={styles.imageContainer}>
-              <Text>Kindly load an image</Text>
-            </View>
-          ) : (
-            <View style={styles.imageContainer}>
-              <Image
-                source={{
-                  uri: photo?.path,
-                }}
-                style={styles.previewImage}
-              />
-            </View>
-          )}
-
-          <View style={styles.button}>
-            <Button title="Pick Image" onPress={() => onAvatarClicked()} />
+    // console.log('data :', images),
+    <>
+      <View style={styles.container}>
+        {photo == null ? (
+          <View style={styles.imageContainer}>
+            <Text>Kindly load an image</Text>
           </View>
+        ) : (
+          <View style={styles.imageContainer}>
+            <Image
+              source={{
+                uri: photo?.path,
+              }}
+              style={styles.previewImage}
+            />
+          </View>
+        )}
+
+        <View style={styles.button}>
+          <Button title="Pick Image" onPress={() => onAvatarClicked()} />
         </View>
-        <View style={styles.flatItems}>
-          {images == null ? (
-            <View style={styles.imageContainer}>
-              <Text>Loading ...</Text>
-            </View>
-          ) : (
+      </View>
+      <View style={styles.flatItems}>
+        {images === null ? (
+          <View style={styles.imageContainer}>
+            <Text>Loading ...</Text>
+          </View>
+        ) : (
+          <ScrollView>
             <FlatList
               data={images}
               keyExtractor={item => item}
@@ -119,15 +127,15 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
                       uri: item,
                     }}
                     style={styles.storeImage}
-                    resizeMode={'contain'}
                   />
                 </View>
               )}
             />
-          )}
-        </View>
-      </>
-    )
+            <View style={{height: 490}} />
+          </ScrollView>
+        )}
+      </View>
+    </>
   );
 };
 
@@ -158,14 +166,14 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   storeImage: {
-    width: 130,
-    height: 130,
-    margin: 5,
+    width: 150,
+    height: 150,
+    margin: 12,
     justifyContent: 'space-between',
     alignSelf: 'center',
+    resizeMode: 'contain',
   },
   flatItems: {
-    marginHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
