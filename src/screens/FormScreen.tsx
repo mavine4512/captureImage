@@ -101,23 +101,31 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
             <Button title="Pick Image" onPress={() => onAvatarClicked()} />
           </View>
         </View>
-        {/*<FlatList*/}
-        {/*  initialNumToRender={2}*/}
-        {/*  data={images}*/}
-        {/*  // keyExtractor={item => item.}*/}
-        {/*  renderItem={({item}) => (*/}
-        {/*    <View>*/}
-        {/*      <Image*/}
-        {/*        source={{*/}
-        {/*          uri: item.url,*/}
-        {/*        }}*/}
-        {/*        // style={styles.image}*/}
-        {/*        resizeMode={'contain'}*/}
-        {/*      />*/}
-        {/*      */}
-        {/*    </View>*/}
-        {/*  )}*/}
-        {/*/>*/}
+        <View style={styles.flatItems}>
+          {images == null ? (
+            <View style={styles.imageContainer}>
+              <Text>Loading ...</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={images}
+              keyExtractor={item => item}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item}) => (
+                <View>
+                  <Image
+                    source={{
+                      uri: item,
+                    }}
+                    style={styles.storeImage}
+                    resizeMode={'contain'}
+                  />
+                </View>
+              )}
+            />
+          )}
+        </View>
       </>
     )
   );
@@ -148,5 +156,17 @@ const styles = StyleSheet.create({
   previewImage: {
     width: '100%',
     height: '100%',
+  },
+  storeImage: {
+    width: 130,
+    height: 130,
+    margin: 5,
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+  },
+  flatItems: {
+    marginHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
