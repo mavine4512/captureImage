@@ -1,15 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Button,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-} from 'react-native';
+import {View, Button, Text, Image, ScrollView, FlatList} from 'react-native';
+import Styles from './styles';
 import storage from '@react-native-firebase/storage';
 import ImageCropPicker from 'react-native-image-crop-picker';
+
+const {container, imageContainer, button, previewImage, storeImage, flatItems} =
+  Styles();
 
 export interface ImagePickerResponse {
   didCancel?: boolean;
@@ -19,7 +15,7 @@ export interface ImagePickerResponse {
   width?: number;
   height?: number;
   fileSize?: number;
-  type?: string; //TODO
+  type?: string;
   fileName?: string;
   duration?: number;
 }
@@ -27,16 +23,17 @@ export interface ImagePickerResponse {
 const FormScreen: React.FC<ImagePickerResponse> = () => {
   const [photo, setPhoto] = useState<any>(null);
   const [images, setImages] = useState<string[]>([]);
-  useEffect(() => {
-    const i: string[] = [];
+
+  const storeImages = () => {
+    const sImage: string[] = [];
     storage()
       .ref('/images/')
       .list()
       .then(files => {
         files.items.map(file => {
           file.getDownloadURL().then(url => {
-            i.push(url);
-            setImages(i);
+            sImage.push(url);
+            setImages(sImage);
           });
         });
         // console.log('images:', images);
@@ -44,8 +41,15 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
       .catch(error => {
         // console.error(error);
       });
-  }, []);
+  };
+
   useEffect(() => {
+    {
+      storeImages();
+    }
+  }, []);
+
+  const getPhoto = () => {
     if (photo) {
       const filename = photo.path.replace(/^.*[\\\/]/, '');
       const reference = storage().ref('/images/' + filename);
@@ -58,7 +62,14 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
           //  console.log('e', error);
         });
     }
-  }, [photo]);
+  };
+
+  useEffect(() => {
+    {
+      getPhoto();
+    }
+  });
+
   const onAvatarClicked = (): void => {
     //start image cropper service
     ImageCropPicker.openPicker({
@@ -78,7 +89,6 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
     })
       .then(image => {
         setPhoto(image);
-        //  uploadImage();
       })
       .catch(error => {
         console.log(error);
@@ -86,31 +96,30 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
   };
 
   return (
-    // console.log('data :', images),
     <>
-      <View style={styles.container}>
+      <View style={container}>
         {photo == null ? (
-          <View style={styles.imageContainer}>
+          <View style={imageContainer}>
             <Text>Kindly load an image</Text>
           </View>
         ) : (
-          <View style={styles.imageContainer}>
+          <View style={imageContainer}>
             <Image
               source={{
                 uri: photo?.path,
               }}
-              style={styles.previewImage}
+              style={previewImage}
             />
           </View>
         )}
 
-        <View style={styles.button}>
+        <View style={button}>
           <Button title="Pick Image" onPress={() => onAvatarClicked()} />
         </View>
       </View>
-      <View style={styles.flatItems}>
-        {images === null ? (
-          <View style={styles.imageContainer}>
+      <View style={flatItems}>
+        {images == null ? (
+          <View style={imageContainer}>
             <Text>Loading ...</Text>
           </View>
         ) : (
@@ -126,7 +135,7 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
                     source={{
                       uri: item,
                     }}
-                    style={styles.storeImage}
+                    style={storeImage}
                   />
                 </View>
               )}
@@ -140,41 +149,3 @@ const FormScreen: React.FC<ImagePickerResponse> = () => {
 };
 
 export default FormScreen;
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    borderWidth: 1,
-    borderColor: 'black',
-    backgroundColor: '#eee',
-    marginTop: 20,
-    width: '80%',
-    height: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    width: '80%',
-    margin: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  previewImage: {
-    width: '100%',
-    height: '100%',
-  },
-  storeImage: {
-    width: 150,
-    height: 150,
-    margin: 12,
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-    resizeMode: 'contain',
-  },
-  flatItems: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
